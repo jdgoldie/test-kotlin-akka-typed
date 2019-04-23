@@ -11,6 +11,7 @@ object TestTypedPersistence {
     sealed class Command {
         data class Add(val item: String) : Command()
         class Clear : Command()
+        class PrintState : Command()
     }
 
     sealed class Event {
@@ -31,6 +32,7 @@ object TestTypedPersistence {
                     when (command) {
                         is Command.Add -> Effect().persist(Event.Added(command.item))
                         is Command.Clear -> Effect().persist(Event.Cleared())
+                        is Command.PrintState -> Effect().none().thenRun { newState: State ->  println(newState.items) }
                     }
                 }
 
